@@ -9,21 +9,20 @@
 <table>
 <?php
 
-$array = [1,2,3,4,5,6,7,8,9,10];
 
-for ($i=-1; $i<10; $i++){
+for ($i=0; $i<=10; $i++){
     echo '<tr>';
     echo '<td style="background-color: orange">';
-    echo $array[$i];
+    if ($i==0) echo ''; else echo $i;
     echo '</td>';
-    for ($m=0; $m<10; $m++){
-        if ($i == -1){
+    for ($m=1; $m<=10; $m++){
+        if ($i == 0){
             echo '<td style="background-color: orange">';
-            echo $array[$m];
+            echo $m;
             echo '</td>';
         }else {
             echo '<td>';
-            echo $array[$i] * $array[$m];
+            echo $i * $m;
             echo '</td>';
         }
     }
