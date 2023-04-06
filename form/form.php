@@ -38,6 +38,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $validation = global_validate($name, $second_name, $regions[$region], $city, $adress, $date);
 }
 
+if ($validation){
+    echo "Пользователь " . $name . ' ' . $second_name . ", " . date('Y', $date) .
+        "г. рождения,<br>проживающий по адресу: " .
+        $regions[$_POST["region"]] . ", г." . $city . ", " . $adress . ",\nбыл успешно добавлен.";
+    die();
+}
+
+
 ?>
 
 <html>
@@ -115,12 +123,4 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 </div>
 </body>
 </html>
-
-<?php
-
-if ($validation){
-    echo "Пользователь " . $name . ' ' . $second_name . ", " . date('Y', $date) .
-        "г. рождения,<br>проживающий по адресу: " .
-        $regions[$_POST["region"]] . ", г." . $city . ", " . $adress . ",\nбыл успешно добавлен.";
-}
 
