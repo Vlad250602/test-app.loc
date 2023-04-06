@@ -39,6 +39,15 @@
     font-family: sans-serif;
 }
 
+#feedback-form input[type=file] {
+    display: block;
+    height: 32px;
+    padding: 6px 16px;
+    width: 100%;
+    border: none;
+    background-color: #f3f3f3;
+    font-family: sans-serif;
+}
 #feedback-form select {
     display: block;
     height: 32px;

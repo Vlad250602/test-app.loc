@@ -38,12 +38,30 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $validation = global_validate($name, $second_name, $regions[$region], $city, $adress, $date);
 }
 
-if ($validation){
-    echo "Пользователь " . $name . ' ' . $second_name . ", " . date('Y', $date) .
-        "г. рождения,<br>проживающий по адресу: " .
-        $regions[$_POST["region"]] . ", г." . $city . ", " . $adress . ",\nбыл успешно добавлен.";
-    die();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["avatar"])) {
+    $blacklist = ['.php', '.phtml', '.php3', '.php4'];
+
+    foreach ($blacklist as $ext) {
+        if (strpos($_FILES['avatar']['name'], $ext) !== false) {
+            exit ('Недопустимое расширение файла');
+        }
+    }
+
+    $whitelist = ['image/jpeg', 'image/gif', 'image/png'];
+
+    if (!in_array($_FILES['avatar']['type'], $whitelist)) {
+        exit('Недопустимый тип файла');
+    }
+
+    $fileName = $_SERVER['DOCUMENT_ROOT'] . "/images/" . $_FILES["avatar"]["name"];
+
+    if (!move_uploaded_file($_FILES["avatar"]["tmp_name"], $fileName)) {
+        echo 'Failed';
+    }
+
 }
+
 
 
 ?>
@@ -53,9 +71,15 @@ if ($validation){
     <link rel="stylesheet" href="form.css">
 </head>
 <body>
-<div id="feedback-form">
+<div id="feedback-form" style="display: <?php if ($validation && $_SERVER["REQUEST_METHOD"] == "POST") echo "none";?>">
     <h2 class="header">Login</h2>
 <form method="POST" enctype="multipart/form-data">
+
+    <!-- File -->
+    <label for="avatar">Avatar</label>
+    <br>
+    <input type="file" name="avatar" id="avatar">
+    <br>
     <!-- Имя -->
     <label for="f_name">Имя</label>
     <input type="text" name="fname" id="f_name"
@@ -67,7 +91,6 @@ if ($validation){
 
     <!-- Фамилия -->
     <label for="s_name">Фамилия</label>
-
     <input type="text" name="sname" id="s_name"
            value="<?php if (!$validation && $_SERVER["REQUEST_METHOD"] == "POST") echo $second_name?>" style="<?php
     if (!validate_size($second_name) && $_SERVER["REQUEST_METHOD"] == "POST"){
@@ -120,6 +143,19 @@ if ($validation){
     <!-- Submit -->
     <input type="submit" value="Send">
 </form>
+</div>
+<div style="display: <?php if (!$validation && !$_SERVER["REQUEST_METHOD"] == "POST") echo "none";?>">
+    <div>
+        <img src="<?php echo "/images/" . $_FILES["avatar"]["name"]?>">
+        <br>
+        <?php
+        if ($validation){
+            echo "Пользователь " . $name . ' ' . $second_name . ", " . date('Y', $date) .
+                "г. рождения,<br>проживающий по адресу: " .
+                $regions[$_POST["region"]] . ", г." . $city . ", " . $adress . ",\nбыл успешно добавлен.";
+        }
+        ?>
+    </div>
 </div>
 </body>
 </html>
