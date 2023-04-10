@@ -1,30 +1,32 @@
 <?php
 
-function global_validate($name, $second_name, $region, $city, $adress, $date){
-    return validate_size($name) and
-        validate_size($second_name) and
-        validate_size($city) and
-        validate_date($date) and
+function globalValidate($name, $second_name, $region, $city, $adress, $date)
+{
+    return validateSize($name, 2, 32) and
+        validateSize($second_name, 2, 32) and
+        validateSize($city, 2, 32) and
+        validateDate($date) and
         ($region) and
-        ($adress != NULL);
+        ($adress != null);
 }
-function validate_size($data){
-    if (mb_strlen($data) < 2 or mb_strlen($data) > 32){
+function validateSize($data, $min, $max)
+{
+    if ((mb_strlen($data) < $min or mb_strlen($data) > $max)){
         return false;
-    } else {
-        return true;
     }
+    return true;
 }
 
-function validate_date($data){
+function validateDate($data)
+{
     if (date('Y', $data) < 1900 or date('Y', $data) > date('Y') or $data == NULL){
         return false;
-    } else {
-        return true;
     }
+    return true;
 }
 
-function test_input($data) {
+function testInput($data)
+{
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);

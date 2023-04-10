@@ -29,13 +29,13 @@ $regions = [
     "Черновицкая область",
 ];
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $name = test_input($_POST["fname"]);
-    $second_name = test_input($_POST["sname"]);
+    $name = testInput($_POST["fname"]);
+    $second_name = testInput($_POST["sname"]);
     $region = $_POST["region"];
-    $city = test_input($_POST['city']);
-    $adress = test_input($_POST['adress']);
+    $city = testInput($_POST['city']);
+    $adress = testInput($_POST['adress']);
     $date = strtotime($_POST['bdate']);
-    $validation = global_validate($name, $second_name, $regions[$region], $city, $adress, $date);
+    $validation = globalValidate($name, $second_name, $regions[$region], $city, $adress, $date);
 }
 
 
