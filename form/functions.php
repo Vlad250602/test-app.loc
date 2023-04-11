@@ -2,14 +2,14 @@
 
 function globalValidate($name, $second_name, $region, $city, $adress, $date)
 {
-    return validateSize($name, 2, 32) and
-        validateSize($second_name, 2, 32) and
-        validateSize($city, 2, 32) and
+    return validateSize($name) and
+        validateSize($second_name) and
+        validateSize($city) and
         validateDate($date) and
         ($region) and
         ($adress != null);
 }
-function validateSize($data, $min, $max)
+function validateSize($data, $min = 2, $max = 32)
 {
     if ((mb_strlen($data) < $min or mb_strlen($data) > $max)){
         return false;

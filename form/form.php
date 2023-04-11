@@ -1,7 +1,10 @@
 <?php
 
+
 include ("functions.php");
 
+
+$validation = false;
 $regions = [
         "Винницкая область",
     "Волынская область",
@@ -28,6 +31,8 @@ $regions = [
     "Черниговская область",
     "Черновицкая область",
 ];
+
+$url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $name = testInput($_POST["fname"]);
     $second_name = testInput($_POST["sname"]);
@@ -36,6 +41,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $adress = testInput($_POST['adress']);
     $date = strtotime($_POST['bdate']);
     $validation = globalValidate($name, $second_name, $regions[$region], $city, $adress, $date);
+
 }
 
 
@@ -62,7 +68,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["avatar"])) {
 
 }
 
-
+if ($_GET['theme'] == 'light' && $_COOKIE['theme'] !== 'light'){
+    setcookie('theme');
+    setcookie('theme', 'light',time()+3600,'/','test-app.loc');
+    header("Refresh:0");
+} elseif ($_GET['theme'] == 'dark' && $_COOKIE['theme'] !== 'dark'){
+    setcookie('theme');
+    setcookie('theme', 'dark',time()+3600,'/','test-app.loc');
+    header("Refresh:0");
+}
 
 ?>
 
@@ -70,7 +84,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["avatar"])) {
 <head>
     <link rel="stylesheet" href="form.css">
 </head>
-<body>
+<body style="background-color: <?php if ($_COOKIE['theme'] == 'light'){ echo 'white';} elseif($_COOKIE['theme'] == "dark"){ echo "gray";}?>">
+<header>
+    <div>
+        <a href="<?php echo $url . '?theme=dark'; ?>" class="btn btn-primary">Dark theme</a>
+        <a href="<?php echo $url . '?theme=light';?>" class="btn btn-primary">Light theme</a>
+    </div>
+</header>
 <div id="feedback-form" style="display: <?php if ($validation && $_SERVER["REQUEST_METHOD"] == "POST") echo "none";?>">
     <h2 class="header">Login</h2>
 <form method="POST" enctype="multipart/form-data">
@@ -83,8 +103,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["avatar"])) {
     <!-- Имя -->
     <label for="f_name">Имя</label>
     <input type="text" name="fname" id="f_name"
-           value="<?php if (!$validation && $_SERVER["REQUEST_METHOD"] == "POST") echo $name?>" style="<?php
-    if (!validate_size($name) && $_SERVER["REQUEST_METHOD"] == "POST"){
+           value="<?php if (!$validation && $_SERVER["REQUEST_METHOD"] == "POST") echo $name ?>" style="<?php
+    if (!validateSize($name) && $_SERVER["REQUEST_METHOD"] == "POST"){
         echo "border: 1px solid red";
     }
     ?>">
@@ -93,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["avatar"])) {
     <label for="s_name">Фамилия</label>
     <input type="text" name="sname" id="s_name"
            value="<?php if (!$validation && $_SERVER["REQUEST_METHOD"] == "POST") echo $second_name?>" style="<?php
-    if (!validate_size($second_name) && $_SERVER["REQUEST_METHOD"] == "POST"){
+    if (!validateSize($second_name) && $_SERVER["REQUEST_METHOD"] == "POST"){
         echo "border: 1px solid red";
     }
     ?>">
@@ -117,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["avatar"])) {
     <label for="city">Город</label>
     <input type="text" name="city" id="city"
            value="<?php if (!$validation && $_SERVER["REQUEST_METHOD"] == "POST") echo $city?>" style="<?php
-    if (!validate_size($city) && $_SERVER["REQUEST_METHOD"] == "POST"){
+    if (!validateSize($city) && $_SERVER["REQUEST_METHOD"] == "POST"){
         echo "border: 1px solid red";
     }
     ?>">
@@ -135,7 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["avatar"])) {
     <label for="b_date">Дата рождения</label>
     <input type="date" name="bdate" id="b_date"
            value="<?php if (!$validation && $_SERVER["REQUEST_METHOD"] == "POST") echo $_POST["bdate"]?>" style="<?php
-    if (!validate_date($date) && $_SERVER["REQUEST_METHOD"] == "POST"){
+    if (!validateDate($date) && $_SERVER["REQUEST_METHOD"] == "POST"){
         echo "border: 1px solid red";
     }
     ?>">
@@ -146,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["avatar"])) {
 </div>
 <div style="display: <?php if (!$validation && !$_SERVER["REQUEST_METHOD"] == "POST") echo "none";?>">
     <div>
-        <img src="<?php echo "/images/" . $_FILES["avatar"]["name"]?>">
+        <img src="<?php if($_FILES["avatar"]) echo "/images/" . $_FILES["avatar"]["name"]?>">
         <br>
         <?php
         if ($validation){
