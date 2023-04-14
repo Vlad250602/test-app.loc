@@ -1,83 +1,6 @@
 <?php
 
 
-include ("functions.php");
-
-
-$validation = false;
-$regions = [
-        "Винницкая область",
-    "Волынская область",
-    "Днепропетровская область",
-    "Донецкая область",
-    "Житомирская область",
-    "Закарпатская область",
-    "Запорожская область",
-    "Ивано-Франковская область",
-    "Киевская область",
-    "Кировоградская область",
-    "Луганская область",
-    "Львоская область",
-    "Николаевская область",
-    "Одесская область",
-    "Полтавская область",
-    "Ровенская область",
-    "Сумская область",
-    "Тернопольская область",
-    "Харьковская область",
-    "Херсонская область",
-    "Хмельницкая область",
-    "Черкасская область",
-    "Черниговская область",
-    "Черновицкая область",
-];
-
-$url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $name = testInput($_POST["fname"]);
-    $second_name = testInput($_POST["sname"]);
-    $region = $_POST["region"];
-    $city = testInput($_POST['city']);
-    $adress = testInput($_POST['adress']);
-    $date = strtotime($_POST['bdate']);
-    $validation = globalValidate($name, $second_name, $regions[$region], $city, $adress, $date);
-
-}
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_FILES["avatar"])) {
-    $blacklist = ['.php', '.phtml', '.php3', '.php4'];
-
-    foreach ($blacklist as $ext) {
-        if (strpos($_FILES['avatar']['name'], $ext) !== false) {
-            exit ('Недопустимое расширение файла');
-        }
-    }
-
-    $whitelist = ['image/jpeg', 'image/gif', 'image/png'];
-
-    if (!in_array($_FILES['avatar']['type'], $whitelist)) {
-        exit('Недопустимый тип файла');
-    }
-
-    $fileName = $_SERVER['DOCUMENT_ROOT'] . "/images/" . $_FILES["avatar"]["name"];
-
-    if (!move_uploaded_file($_FILES["avatar"]["tmp_name"], $fileName)) {
-        echo 'Failed';
-    }
-
-}
-
-if ($_GET['theme'] == 'light' && $_COOKIE['theme'] !== 'light'){
-    setcookie('theme');
-    setcookie('theme', 'light',time()+3600,'/','test-app.loc');
-    header("Refresh:0");
-} elseif ($_GET['theme'] == 'dark' && $_COOKIE['theme'] !== 'dark'){
-    setcookie('theme');
-    setcookie('theme', 'dark',time()+3600,'/','test-app.loc');
-    header("Refresh:0");
-}
-
 ?>
 
 <html>
@@ -86,12 +9,12 @@ if ($_GET['theme'] == 'light' && $_COOKIE['theme'] !== 'light'){
 </head>
 <body style="background-color: <?php if ($_COOKIE['theme'] == 'light'){ echo 'white';} elseif($_COOKIE['theme'] == "dark"){ echo "gray";}?>">
 <header>
-    <div>
+    <div style="display: <?php if ($_GET['id']) echo "none";?>">
         <a href="<?php echo $url . '?theme=dark'; ?>" class="btn btn-primary">Dark theme</a>
         <a href="<?php echo $url . '?theme=light';?>" class="btn btn-primary">Light theme</a>
     </div>
 </header>
-<div id="feedback-form" style="display: <?php if ($validation && $_SERVER["REQUEST_METHOD"] == "POST") echo "none";?>">
+<div id="feedback-form" style="display: <?php if (($validation && $_SERVER["REQUEST_METHOD"] == "POST") || $_GET['id']) echo "none";?>">
     <h2 class="header">Login</h2>
 <form method="POST" enctype="multipart/form-data">
 

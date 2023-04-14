@@ -32,3 +32,9 @@ function testInput($data)
     $data = htmlspecialchars($data);
     return $data;
 }
+
+function getConnect()
+{
+    $connect = mysqli_connect('localhost', 'root', 'vlad250602', 'test_db');
+    return $connect;
+}
