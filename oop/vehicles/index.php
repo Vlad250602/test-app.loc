@@ -6,7 +6,11 @@ require_once "classes/Car.php";
 require_once "classes/Boat.php";
 require_once "classes/Plane.php";
 
-$car = new Car(100);
+use App\Car;
+use App\Plane;
+use App\Boat;
+
+$car = new Car(100, Car::GERMANY);
 $plane = new Plane(400);
 $boat = new Boat(20);
 
@@ -51,4 +55,7 @@ echo PHP_EOL;
 echo $boat->down(30);
 echo PHP_EOL;
 echo $boat->down(30);
+echo PHP_EOL;
+
+echo App\Vehicle::getCount();
 echo PHP_EOL;

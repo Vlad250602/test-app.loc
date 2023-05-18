@@ -1,5 +1,6 @@
 <?php
 
+namespace App;
 class Boat extends Vehicle implements MovableInterface
 {
     public function start()

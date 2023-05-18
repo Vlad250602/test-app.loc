@@ -1,8 +1,22 @@
 <?php
 
+namespace App;
 
 class Car extends Vehicle implements MovableInterface
 {
+    const GERMANY = 'Audi';
+    const ITALY = 'Fiat';
+    const FRANCE = 'Peugeot';
+
+    protected $mark;
+
+    public function __construct($maxSpeed, $mark)
+    {
+        parent::__construct($maxSpeed);
+        $this->mark = $mark;
+
+    }
+
     public function start()
     {
         return "Двигатель машины запущен";
