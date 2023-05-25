@@ -1,6 +1,8 @@
 <?php
 
-namespace App;
+namespace App\vehicles;
+
+use App\MovableInterface;
 
 class Car extends Vehicle implements MovableInterface
 {

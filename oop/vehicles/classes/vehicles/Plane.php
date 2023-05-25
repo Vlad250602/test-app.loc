@@ -1,6 +1,8 @@
 <?php
 
-namespace App;
+namespace App\vehicles;
+use App\MovableInterface;
+
 class Plane extends Vehicle implements MovableInterface
 {
     public function start()

@@ -1,18 +1,22 @@
 <?php
 
-require_once "classes/Vehicle.php";
-require_once "classes/MovableInterface.php";
-require_once "classes/Car.php";
-require_once "classes/Boat.php";
-require_once "classes/Plane.php";
+spl_autoload_register(function ($name){
+   $segments = explode('\\', $name);
+   array_shift($segments);
+   $path = 'classes';
+   foreach ($segments as $segment){
+       $path .= '/' . $segment ;
+   }
+   $path .= '.php';
+   if ($path){
+       echo $path;
+       require_once $path;
+   }
+});
 
-use App\Car;
-use App\Plane;
-use App\Boat;
-
-$car = new Car(100, Car::GERMANY);
-$plane = new Plane(400);
-$boat = new Boat(20);
+$car = new App\vehicles\Car(100, App\vehicles\Car::GERMANY);
+$plane = new App\vehicles\Plane(400);
+$boat = new App\vehicles\Boat(20);
 
 echo $car->start();
 echo PHP_EOL;
@@ -57,5 +61,5 @@ echo PHP_EOL;
 echo $boat->down(30);
 echo PHP_EOL;
 
-echo App\Vehicle::getCount();
+echo \App\vehicles\Vehicle::getCount();
 echo PHP_EOL;
